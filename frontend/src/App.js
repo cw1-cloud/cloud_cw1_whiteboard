@@ -2,6 +2,7 @@ import "./App.scss";
 import io from "socket.io-client";
 import { useEffect, useState } from "react";
 import Board from "./components/Board";
+import Toolbar from "./components/ToolBar";
 
 const socket = io.connect("http://localhost:3001/");
 
@@ -22,6 +23,8 @@ function App() {
   return (
     <div className="App">
       <Board />
+      <Toolbar />
+      
 
       <input
         placeholder="message"
