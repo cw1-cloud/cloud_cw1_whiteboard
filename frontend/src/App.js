@@ -3,6 +3,7 @@ import io from "socket.io-client";
 import { useEffect, useState } from "react";
 import Board from "./components/Board";
 import Toolbar from "./components/ToolBar";
+import Header from "./components/Header";
 
 const socket = io.connect("http://localhost:3001/");
 
@@ -22,11 +23,11 @@ function App() {
 
   return (
     <div className="App">
+      <Header />
       <Board />
       <Toolbar />
-      
 
-      <input
+      {/* <input
         placeholder="message"
         onChange={(event) => {
           setMessage(event.target.value);
@@ -34,7 +35,7 @@ function App() {
       />
       <button onClick={sendMessage}>Send message</button>
       <h1>Message:</h1>
-      {messageReceived}
+      {messageReceived} */}
     </div>
   );
 }
