@@ -2,12 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { fabric } from "fabric";
 import "../styles/Board.scss";
 
-const Board = () => {
+const Board = ({action}) => {
   const canvasRef = useRef(null);
   const [fabricCanvas, setFabricCanvas] = useState();
+  
 
   useEffect(
-    (action) => {
+    () => {
+      console.log("action," , action);
       if (canvasRef.current) {
         const parentWidth = canvasRef.current.parentElement.clientWidth;
         const height = canvasRef.current.parentElement.clientHeight;
@@ -25,11 +27,12 @@ const Board = () => {
         });
       }
     },
-    [canvasRef]
+    [canvasRef,action]
   );
 
   return (
     <div className="container">
+      
       <canvas ref={canvasRef}></canvas>
     </div>
   );

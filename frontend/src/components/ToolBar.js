@@ -6,7 +6,11 @@ import TitleIcon from "@mui/icons-material/Title";
 import UndoIcon from "@mui/icons-material/Undo";
 import RedoIcon from "@mui/icons-material/Redo";
 
-const Toolbar = ({ handleTextIconClick }) => {
+const Toolbar = ({onActionChange}) => {
+  const handleTextIconClick = () => {
+    onActionChange("text"); 
+  };
+
   return (
     <div className="toolbar">
       <div className="toolbar-icons">
@@ -14,7 +18,7 @@ const Toolbar = ({ handleTextIconClick }) => {
           <CreateIcon />
         </IconButton>
 
-        <IconButton aria-label="text">
+        <IconButton aria-label="text" onClick={handleTextIconClick}>
           <TitleIcon />
         </IconButton>
 
