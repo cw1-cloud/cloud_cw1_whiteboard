@@ -10,11 +10,15 @@ const socket = io.connect("http://localhost:3001/");
 function App() {
   const [message, setMessage] = useState("");
   const [messageReceived, setMessageReceived] = useState("");
+  const [action, setAction] = useState("drawing");
 
   const sendMessage = () => {
     socket.emit("send_message", { message: message });
   };
 
+  const handleActionChange = (newAction) => {
+    setAction(newAction);
+  };
   useEffect(() => {
     socket.on("receive_message", (data) => {
       setMessageReceived(data.message);
@@ -24,7 +28,7 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <Board />
+      <Board action={action} />
       <Toolbar />
 
       {/* <input

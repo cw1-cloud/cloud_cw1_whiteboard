@@ -6,18 +6,27 @@ const Board = () => {
   const canvasRef = useRef(null);
   const [fabricCanvas, setFabricCanvas] = useState();
 
-  useEffect(() => {
-    if (canvasRef.current) {
-      const parentWidth = canvasRef.current.parentElement.clientWidth;
-      const height = canvasRef.current.parentElement.clientHeight;
-      const canvas = new fabric.Canvas(canvasRef.current, {
-        height: height,
-        width: parentWidth,
-        isDrawingMode: true,
-      });
-      setFabricCanvas(canvas);
-    }
-  }, [canvasRef]);
+  useEffect(
+    (action) => {
+      if (canvasRef.current) {
+        const parentWidth = canvasRef.current.parentElement.clientWidth;
+        const height = canvasRef.current.parentElement.clientHeight;
+        const canvas = new fabric.Canvas(canvasRef.current, {
+          height: height,
+          width: parentWidth,
+          isDrawingMode: action === "drawing",
+        });
+        setFabricCanvas(canvas);
+
+        //when an something is drawn on the page then handle the path.
+        canvas.on("path:created", (e) => {
+          const json = canvas.toJSON();
+          console.log(json);
+        });
+      }
+    },
+    [canvasRef]
+  );
 
   return (
     <div className="container">
