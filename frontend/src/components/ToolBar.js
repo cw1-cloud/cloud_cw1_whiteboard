@@ -6,15 +6,17 @@ import TitleIcon from "@mui/icons-material/Title";
 import UndoIcon from "@mui/icons-material/Undo";
 import RedoIcon from "@mui/icons-material/Redo";
 
-const Toolbar = ({onActionChange}) => {
+const Toolbar = ({ onActionChange }) => {
   const handleTextIconClick = () => {
-    onActionChange("text"); 
+    onActionChange("text");
   };
-
+  const handlePencilIconClick = () => {
+    onActionChange("drawing");
+  };
   return (
     <div className="toolbar">
       <div className="toolbar-icons">
-        <IconButton aria-label="pencil">
+        <IconButton aria-label="pencil" onClick={handlePencilIconClick}>
           <CreateIcon />
         </IconButton>
 

@@ -11,13 +11,13 @@ function App() {
   const [message, setMessage] = useState("");
   const [messageReceived, setMessageReceived] = useState("");
   const [action, setAction] = useState("drawing");
-  
 
   const sendMessage = () => {
     socket.emit("send_message", { message: message });
   };
 
   const handleActionChange = (newAction) => {
+    console.log("new Action made", newAction);
     setAction(newAction);
   };
   useEffect(() => {
@@ -30,7 +30,7 @@ function App() {
     <div className="App">
       <Header />
       <Board action={action} />
-      <Toolbar onActionChange={handleActionChange}/>
+      <Toolbar onActionChange={handleActionChange} />
 
       {/* <input
         placeholder="message"
