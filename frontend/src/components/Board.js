@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { fabric } from "fabric";
 import "../styles/Board.scss";
 
@@ -9,8 +9,7 @@ const Board = ({ action }) => {
   const [drawingsJSON, setDrawingJSON] = useState({});
   // This is the latest thing that's drawn on the page
   const [latestPath, setLatestPath] = useState(null);
-
-  const [mode, setMode] = useState(action);
+  const [textObject, setTextObject] = useState(null);
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -19,60 +18,45 @@ const Board = ({ action }) => {
       const canvas = new fabric.Canvas(canvasRef.current, {
         height: height,
         width: parentWidth,
-        isDrawingMode: true,
+        isDrawingMode: action === "drawing",
       });
-      setFabricCanvas(canvas);
-    }
-  }, [canvasRef]);
 
-  useEffect(() => {
-    setMode(action);
 
-    switch (mode) {
-      case "drawing":
-        console.log("the currentMode is ", mode);
-        fabricCanvas.isDrawingMode = true;
-        console.log(fabricCanvas.isDrawingMode);
-        break;
-      case "text":
-        console.log("the currentMode is ", mode);
-        fabricCanvas.isDrawingMode = false;
-        console.log(fabricCanvas.isDrawingMode);
-        break;
-
-      default:
-        break;
-    }
-  }, [action, fabricCanvas, mode]);
-
-  useEffect(() => {
-    if (fabricCanvas) {
-      //when an something is drawn on the page then handle the path.
-      fabricCanvas.on("path:created", (path) => {
-        console.log("path", path);
+      canvas.on("path:created", (path) => {
         setLatestPath(path);
-        const json = fabricCanvas.toJSON();
-        setDrawingJSON("allDrawings", json);
-        console.log(json);
+        const json = canvas.toJSON();
+        setDrawingJSON(json);
       });
-      fabricCanvas.renderAll.bind(fabricCanvas);
 
-      // if (canvasRef.current && action === "text") {
-      //   console.log("text mode is about to be set");
-      //   const text = new fabric.IText("Enter text here", {
-      //     left: 100,
-      //     top: 100,
-      //     fontFamily: "Arial",
-      //     fontSize: 20,
-      //     selected: true,
-      //     editable: true,
-      //   });
+      canvas.on("object:selected", (e) => {
+        if (e.target.type === "i-text") {
+          canvas.isDrawingMode = false;
+        }
+      });
 
-      //   canvas.add(text);
-      //   canvas.renderAll.bind(canvas);
-      // }
+      if (action === "text") {
+        canvas.isDrawingMode = false;
+        if (!textObject) {
+          const text = new fabric.IText("Enter text here", {
+            left: 50,
+            top: 50,
+          });
+          setTextObject(text);
+        }
+        if (textObject) {
+          canvas.add(textObject);
+        }
+      } else {
+        canvas.loadFromJSON(drawingsJSON, canvas.renderAll.bind(canvas));
+      }
+
+      setFabricCanvas(canvas);
+
+      return () => {
+        canvas.dispose();
+      };
     }
-  }, [action, fabricCanvas]);
+  }, [action, canvasRef, drawingsJSON, textObject]);
 
   return (
     <div className="container">
