@@ -1,11 +1,9 @@
 import React from "react";
 import "../styles/Header.scss";
-import PsychologyIcon from '@mui/icons-material/Psychology';
 
 const Header = () => {
   return (
     <div className="headerbar">
-     
       <div className="header-text"> BrainCanvas </div>
     </div>
 

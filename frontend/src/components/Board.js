@@ -1,67 +1,101 @@
 import React, { useEffect, useRef, useState } from "react";
 import { fabric } from "fabric";
 import "../styles/Board.scss";
+import CreateIcon from "@mui/icons-material/Create";
+import IconButton from "@mui/material/IconButton";
+import TitleIcon from "@mui/icons-material/Title";
+// import UndoIcon from "@mui/icons-material/Undo";
+// import RedoIcon from "@mui/icons-material/Redo";
 
-const Board = ({ action }) => {
+const Board = () => {
+  //creates a reference to the canvas element in the DOM
   const canvasRef = useRef(null);
-  const [fabricCanvas, setFabricCanvas] = useState();
-  // This contains all the drawings
-  const [drawingsJSON, setDrawingJSON] = useState({});
-  // This is the latest thing that's drawn on the page
-  const [latestPath, setLatestPath] = useState(null);
-  const [textObject, setTextObject] = useState(null);
+  //creates a state variable to store the Fabric.js canvas once it is initialized
+  const [fabricCanvas, setFabricCanvas] = useState(null);
 
   useEffect(() => {
+    //This function runs when the component mounts
     if (canvasRef.current) {
+      //initializes the Fabric.js canvas
+      console.log("initing")
       const parentWidth = canvasRef.current.parentElement.clientWidth;
       const height = canvasRef.current.parentElement.clientHeight;
       const canvas = new fabric.Canvas(canvasRef.current, {
         height: height,
         width: parentWidth,
-        isDrawingMode: action === "drawing",
+        isDrawingMode: true,
       });
-
-
-      canvas.on("path:created", (path) => {
-        setLatestPath(path);
-        const json = canvas.toJSON();
-        setDrawingJSON(json);
-      });
-
-      canvas.on("object:selected", (e) => {
-        if (e.target.type === "i-text") {
-          canvas.isDrawingMode = false;
-        }
-      });
-
-      if (action === "text") {
-        canvas.isDrawingMode = false;
-        if (!textObject) {
-          const text = new fabric.IText("Enter text here", {
-            left: 50,
-            top: 50,
-          });
-          setTextObject(text);
-        }
-        if (textObject) {
-          canvas.add(textObject);
-        }
-      } else {
-        canvas.loadFromJSON(drawingsJSON, canvas.renderAll.bind(canvas));
-      }
-
       setFabricCanvas(canvas);
+      console.log("initing done")
+      console.log(canvas)
 
+      //This is the cleanup function that runs when the component unmounts.
+      //It disposes of the Fabric.js canvas to free up resources.
+      //Do this to avoid unexpected behavior when the component unmounts
       return () => {
         canvas.dispose();
       };
     }
-  }, [action, canvasRef, drawingsJSON, textObject]);
+  }, [canvasRef]);
 
-  return (
-    <div className="container">
-      <canvas ref={canvasRef}></canvas>
-    </div>
-  );
-};
+  const clearBoard = () => {
+    console.log("clearBoard");
+    if (fabricCanvas) {
+      fabricCanvas.clear();
+      fabricCanvas.isDrawingMode = true;
+    }
+  };
+
+  function handlePencilIconClick() {
+    if (fabricCanvas) {
+      fabricCanvas.isDrawingMode = true;
+    }
+  }
+
+  function handleTextIconClick() {
+    if (fabricCanvas) {
+      fabricCanvas.isDrawingMode = false;
+      //add text
+      //random left and top values between 50 and 100
+      const left_value = Math.floor(Math.random() * 50) + 50;
+      const top_value = Math.floor(Math.random() * 50) + 50;
+      fabricCanvas.add(
+        new fabric.IText("Tap and Type", {
+          left: left_value,
+          top: top_value,
+          fontFamily: "arial black",
+          fill: "#333",
+          fontSize: 50,
+        })
+      );
+    }
+  }
+
+    return (
+      <div className="container">
+        <canvas ref={canvasRef}></canvas>
+        <div className="toolbar">
+          <div className="toolbar-icons">
+            <IconButton aria-label="pencil" onClick={ () => handlePencilIconClick()}>
+              <CreateIcon />
+            </IconButton>
+
+            <IconButton aria-label="text" onClick={ () => handleTextIconClick()}>
+              <TitleIcon />
+            </IconButton>
+
+            {/* <IconButton color="undo" aria-label="undo an action">
+          <UndoIcon />
+        </IconButton>
+
+        <IconButton color="redo" aria-label="redo an action">
+          <RedoIcon />
+        </IconButton> */}
+            <button onClick={() => clearBoard()}>Clear</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
 export default Board;

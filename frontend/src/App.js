@@ -1,8 +1,7 @@
-import "./App.scss";
-import io from "socket.io-client";
 import { useEffect, useState } from "react";
+import io from "socket.io-client";
+import "./App.scss";
 import Board from "./components/Board";
-import Toolbar from "./components/ToolBar";
 import Header from "./components/Header";
 
 const socket = io.connect("http://localhost:3001/");
@@ -16,10 +15,7 @@ function App() {
     socket.emit("send_message", { message: message });
   };
 
-  const handleActionChange = (newAction) => {
-    console.log("new Action made", newAction);
-    setAction(newAction);
-  };
+
   useEffect(() => {
     socket.on("receive_message", (data) => {
       setMessageReceived(data.message);
@@ -29,8 +25,7 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <Board action={action} />
-      <Toolbar onActionChange={handleActionChange} />
+      <Board />
 
       {/* <input
         placeholder="message"

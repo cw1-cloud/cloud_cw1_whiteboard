@@ -1,3 +1,18 @@
 .container {
-  height: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  
+  .toolbar {
+    background-color: #f3f6f6;
+    padding: 0.4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+
+
+    .toolbar-icons {
+      width: 50%;
+    }
+  }
 }
