@@ -17,7 +17,7 @@ const Board = () => {
     //This function runs when the component mounts
     if (canvasRef.current) {
       //initializes the Fabric.js canvas
-      console.log("initing")
+      console.log("initing");
       const parentWidth = canvasRef.current.parentElement.clientWidth;
       const height = canvasRef.current.parentElement.clientHeight;
       const canvas = new fabric.Canvas(canvasRef.current, {
@@ -26,8 +26,8 @@ const Board = () => {
         isDrawingMode: true,
       });
       setFabricCanvas(canvas);
-      console.log("initing done")
-      console.log(canvas)
+      console.log("initing done");
+      console.log(canvas);
 
       //This is the cleanup function that runs when the component unmounts.
       //It disposes of the Fabric.js canvas to free up resources.
@@ -71,31 +71,34 @@ const Board = () => {
     }
   }
 
-    return (
-      <div className="container">
-        <canvas ref={canvasRef}></canvas>
-        <div className="toolbar">
-          <div className="toolbar-icons">
-            <IconButton aria-label="pencil" onClick={ () => handlePencilIconClick()}>
-              <CreateIcon />
-            </IconButton>
+  return (
+    <div className="container">
+      <canvas ref={canvasRef}></canvas>
+      <div className="toolbar">
+        <div className="toolbar-icons">
+          <IconButton
+            aria-label="pencil"
+            onClick={() => handlePencilIconClick()}
+          >
+            <CreateIcon />
+          </IconButton>
 
-            <IconButton aria-label="text" onClick={ () => handleTextIconClick()}>
-              <TitleIcon />
-            </IconButton>
+          <IconButton aria-label="text" onClick={() => handleTextIconClick()}>
+            <TitleIcon />
+          </IconButton>
 
-            {/* <IconButton color="undo" aria-label="undo an action">
+          {/* <IconButton color="undo" aria-label="undo an action">
           <UndoIcon />
         </IconButton>
 
         <IconButton color="redo" aria-label="redo an action">
           <RedoIcon />
         </IconButton> */}
-            <button onClick={() => clearBoard()}>Clear</button>
-          </div>
+          <button onClick={() => clearBoard()}>Clear</button>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+};
 
 export default Board;
