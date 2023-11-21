@@ -29,6 +29,12 @@ const Board = () => {
       console.log("initing done");
       console.log(canvas);
 
+      //detecting whiteboard changes
+      canvas.on("after:render", (e) => {
+        console.log("After render", canvas);
+        setFabricCanvas(canvas);
+      });
+
       //This is the cleanup function that runs when the component unmounts.
       //It disposes of the Fabric.js canvas to free up resources.
       //Do this to avoid unexpected behavior when the component unmounts
@@ -48,12 +54,14 @@ const Board = () => {
 
   function handlePencilIconClick() {
     if (fabricCanvas) {
+      console.log("In drawing mode");
       fabricCanvas.isDrawingMode = true;
     }
   }
 
   function handleTextIconClick() {
     if (fabricCanvas) {
+      console.log("In writing mode");
       fabricCanvas.isDrawingMode = false;
       //add text
       //random left and top values between 50 and 100
@@ -86,14 +94,7 @@ const Board = () => {
           <IconButton aria-label="text" onClick={() => handleTextIconClick()}>
             <TitleIcon />
           </IconButton>
-
-          {/* <IconButton color="undo" aria-label="undo an action">
-          <UndoIcon />
-        </IconButton>
-
-        <IconButton color="redo" aria-label="redo an action">
-          <RedoIcon />
-        </IconButton> */}
+          {/* need to add IconButton for clear board maybe add an eraser */}
           <button onClick={() => clearBoard()}>Clear</button>
         </div>
       </div>
