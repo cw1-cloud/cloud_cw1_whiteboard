@@ -1,8 +1,7 @@
-import "./App.scss";
-import io from "socket.io-client";
 import { useEffect, useState } from "react";
+import io from "socket.io-client";
+import "./App.scss";
 import Board from "./components/Board";
-import Toolbar from "./components/ToolBar";
 import Header from "./components/Header";
 
 const socket = io.connect("http://localhost:3001/");
@@ -10,10 +9,12 @@ const socket = io.connect("http://localhost:3001/");
 function App() {
   const [message, setMessage] = useState("");
   const [messageReceived, setMessageReceived] = useState("");
+  const [action, setAction] = useState("drawing");
 
   const sendMessage = () => {
     socket.emit("send_message", { message: message });
   };
+
 
   useEffect(() => {
     socket.on("receive_message", (data) => {
@@ -25,7 +26,6 @@ function App() {
     <div className="App">
       <Header />
       <Board />
-      <Toolbar />
 
       {/* <input
         placeholder="message"

@@ -1,5 +1,15 @@
 .headerbar {
   background-color: #F3F6F6;
-  padding: 20px;
+  padding-bottom: 20px;
   text-align: left;
+  position: absolute;
+  width: 100%;
+  top:0;
+  z-index: 2;
+
+  .header-text{
+    // position: relative;
+    // width: 100%;
+    padding: 10px 20px;
+  }
 }
