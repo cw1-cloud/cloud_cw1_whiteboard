@@ -1,41 +1,44 @@
 import { useEffect, useState } from "react";
-import io from "socket.io-client";
 import "./App.scss";
 import Board from "./components/Board";
 import Header from "./components/Header";
-
-const socket = io.connect("http://localhost:3001/");
+import { socket } from "./hooks/socket";
+import WelcomeModal from "./components/welcomeModal";
 
 function App() {
-  const [message, setMessage] = useState("");
-  const [messageReceived, setMessageReceived] = useState("");
-  const [action, setAction] = useState("drawing");
+  const [isConnected, setIsConnected] = useState(socket.connected);
 
-  const sendMessage = () => {
-    socket.emit("send_message", { message: message });
-  };
-
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    socket.on("receive_message", (data) => {
-      setMessageReceived(data.message);
-    });
-  }, [socket]);
+    setOpen(true);
 
+    function onConnect() {
+      setIsConnected(true);
+    }
+
+    function onDisconnect() {
+      setIsConnected(false);
+    }
+
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+
+    return () => {
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+    };
+  }, []);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
     <div className="App">
+      <WelcomeModal open={open} handleClose={handleClose}  />
+
       <Header />
       <Board />
-
-      {/* <input
-        placeholder="message"
-        onChange={(event) => {
-          setMessage(event.target.value);
-        }}
-      />
-      <button onClick={sendMessage}>Send message</button>
-      <h1>Message:</h1>
-      {messageReceived} */}
     </div>
   );
 }

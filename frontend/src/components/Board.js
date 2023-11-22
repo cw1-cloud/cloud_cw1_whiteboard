@@ -49,6 +49,9 @@ const Board = () => {
     if (fabricCanvas) {
       fabricCanvas.clear();
       fabricCanvas.isDrawingMode = true;
+
+      // I want to delete from the nosql database
+      
     }
   };
 
