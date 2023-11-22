@@ -4,6 +4,7 @@ import "../styles/Board.scss";
 import CreateIcon from "@mui/icons-material/Create";
 import IconButton from "@mui/material/IconButton";
 import TitleIcon from "@mui/icons-material/Title";
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 // import UndoIcon from "@mui/icons-material/Undo";
 // import RedoIcon from "@mui/icons-material/Redo";
 
@@ -49,6 +50,20 @@ const Board = () => {
     if (fabricCanvas) {
       fabricCanvas.clear();
       fabricCanvas.isDrawingMode = true;
+
+      //entries= Account.objects.all()
+// entries.delete()
+
+      //db. get
+      //clear db
+
+      /* const docRef = firebase.firestore().collection('yourCollection').doc('yourDocId');
+  docRef.delete().then(() => {
+  console.log("Document successfully deleted!");
+}).catch((error) => {
+  console.error("Error removing document: ", error);
+});
+*/
     }
   };
 
@@ -94,8 +109,9 @@ const Board = () => {
           <IconButton aria-label="text" onClick={() => handleTextIconClick()}>
             <TitleIcon />
           </IconButton>
-          {/* need to add IconButton for clear board maybe add an eraser */}
-          <button onClick={() => clearBoard()}>Clear</button>
+          <IconButton aria-label="text" onClick={() => clearBoard()}>
+            <DeleteRoundedIcon />
+          </IconButton>
         </div>
       </div>
     </div>
