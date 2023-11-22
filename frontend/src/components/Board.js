@@ -14,7 +14,7 @@ const Board = () => {
   const [fabricCanvas, setFabricCanvas] = useState(null);
 
   useEffect(() => {
-    //This function runs when the component mounts
+    //This function run s when the component mounts
     if (canvasRef.current) {
       //initializes the Fabric.js canvas
       console.log("initing");
@@ -32,7 +32,7 @@ const Board = () => {
       //detecting whiteboard changes
       canvas.on("after:render", (e) => {
         console.log("After render", canvas);
-        setFabricCanvas(canvas);
+        setFabricCanvas(canvas); // save canvas to database
       });
 
       //This is the cleanup function that runs when the component unmounts.
