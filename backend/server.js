@@ -1,34 +1,44 @@
-const app = require('express')();
+const app = require("express")();
 const port = 3001;
-const cors = require('cors');
+const cors = require("cors");
 
 app.use(cors());
 
-const server = require('http').createServer(app);
-const { Server } = require('socket.io'); // Import the Server constructor
+const server = require("http").createServer(app);
+const { Server } = require("socket.io"); // Import the Server constructor
 
 const io = new Server(server, {
   cors: {
     origin: "http://localhost:3000",
-    methods: ["GET", "POST"]
-  }
+    methods: ["GET", "POST"],
+  },
 });
 
-io.on('connection', (socket) => {
-    console.log("User connected " , socket.id);
+//local canvas state
+let canvasState = {};
 
-    socket.on("send_message",(data) =>{
-        socket.broadcast.emit("receive_message",data)
-    })
+io.on("connection", (socket) => {
+  console.log("User connected ", socket.id);
 
-    socket.on('disconnect', function () {
-        console.log('User disconnected');
-      });
+  socket.on("register", (name) => {
+    console.log("User registered ", name);
+    socket.broadcast.emit("welome", name);
   });
 
+  socket.on("disconnect", function () {
+    console.log("User disconnected");
+  });
 
+  socket.on("canvas-data", (data) => {
+    console.log("data being passed in");
+    let incomingData = JSON.parse(data);
+    canvasState = { ...canvasState, ...incomingData };
+    console.log(incomingData.objects.length);
 
+    io.emit("canvas-data", JSON.stringify(canvasState));
+  });
+});
 
-server.listen(port, function() {
+server.listen(port, function () {
   console.log(`Listening on port ${port}`);
 });

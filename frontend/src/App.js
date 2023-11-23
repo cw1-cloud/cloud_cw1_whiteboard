@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.scss";
 import Board from "./components/Board";
 import Header from "./components/Header";
@@ -6,37 +6,25 @@ import { socket } from "./hooks/socket";
 import WelcomeModal from "./components/welcomeModal";
 
 function App() {
-  const [isConnected, setIsConnected] = useState(socket.connected);
+  const [showModal, setShowModal] = useState(true);
 
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    setOpen(true);
-
-    function onConnect() {
-      setIsConnected(true);
+  const handleNameSubmit = (userName) => {
+  
+    if (userName) {
+      socket.emit("register", userName);
     }
-
-    function onDisconnect() {
-      setIsConnected(false);
-    }
-
-    socket.on("connect", onConnect);
-    socket.on("disconnect", onDisconnect);
-
-    return () => {
-      socket.off("connect", onConnect);
-      socket.off("disconnect", onDisconnect);
-    };
-  }, []);
+    handleClose();
+  };
 
   const handleClose = () => {
-    setOpen(false);
+    setShowModal(false);
   };
+
   return (
     <div className="App">
-      <WelcomeModal open={open} handleClose={handleClose}  />
-
+      {showModal && (
+        <WelcomeModal onSubmitName={handleNameSubmit} open={handleClose} />
+      )}
       <Header />
       <Board />
     </div>

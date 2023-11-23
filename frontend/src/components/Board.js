@@ -4,8 +4,7 @@ import "../styles/Board.scss";
 import CreateIcon from "@mui/icons-material/Create";
 import IconButton from "@mui/material/IconButton";
 import TitleIcon from "@mui/icons-material/Title";
-// import UndoIcon from "@mui/icons-material/Undo";
-// import RedoIcon from "@mui/icons-material/Redo";
+import { socket } from "../hooks/socket";
 
 const Board = () => {
   //creates a reference to the canvas element in the DOM
@@ -32,6 +31,15 @@ const Board = () => {
       //detecting whiteboard changes
       canvas.on("after:render", (e) => {
         console.log("After render", canvas);
+
+        console.log(canvas);
+
+        //get the canvas state convert to json
+        const json = JSON.stringify(canvas);
+        console.log(json);
+        //send the json to the backend
+        socket.emit("canvas-data", json);
+
         setFabricCanvas(canvas);
       });
 
@@ -51,7 +59,6 @@ const Board = () => {
       fabricCanvas.isDrawingMode = true;
 
       // I want to delete from the nosql database
-      
     }
   };
 

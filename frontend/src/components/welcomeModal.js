@@ -4,13 +4,12 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
-function WelcomeModal({ open, handleClose }) {
+function WelcomeModal({ onSubmitName, open, handleClose }) {
   const [name, setName] = useState("");
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    alert(`Submitting Name ${name}`);
-    // Close modal
-    // handleClose();
+    onSubmitName(name);
   };
 
   return (
