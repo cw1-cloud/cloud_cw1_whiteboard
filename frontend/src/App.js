@@ -9,7 +9,6 @@ function App() {
   const [showModal, setShowModal] = useState(true);
 
   const handleNameSubmit = (userName) => {
-  
     if (userName) {
       socket.emit("register", userName);
     }
@@ -22,11 +21,15 @@ function App() {
 
   return (
     <div className="App">
-      {showModal && (
-        <WelcomeModal onSubmitName={handleNameSubmit} open={handleClose} />
-      )}
       <Header />
       <Board />
+      {showModal && (
+        <WelcomeModal
+          onSubmitName={handleNameSubmit}
+          open={showModal}
+          handleClose={handleClose}
+        />
+      )}
     </div>
   );
 }

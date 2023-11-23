@@ -24,25 +24,8 @@ const Board = () => {
         width: parentWidth,
         isDrawingMode: true,
       });
-      setFabricCanvas(canvas);
       console.log("initing done");
-      console.log(canvas);
-
-      //detecting whiteboard changes
-      canvas.on("after:render", (e) => {
-        console.log("After render", canvas);
-
-        console.log(canvas);
-
-        //get the canvas state convert to json
-        const json = JSON.stringify(canvas);
-        console.log(json);
-        //send the json to the backend
-        socket.emit("canvas-data", json);
-
-        setFabricCanvas(canvas);
-      });
-
+      setFabricCanvas(canvas);
       //This is the cleanup function that runs when the component unmounts.
       //It disposes of the Fabric.js canvas to free up resources.
       //Do this to avoid unexpected behavior when the component unmounts
@@ -50,7 +33,69 @@ const Board = () => {
         canvas.dispose();
       };
     }
-  }, [canvasRef]);
+  }, []);
+
+  useEffect(() => {
+    // Parse JSON and add objects to canvas
+
+    if (fabricCanvas) {
+      fabricCanvas.on("object:added", handleCanvasChange);
+      fabricCanvas.on("object:modified", handleCanvasChange);
+      fabricCanvas.on("object:removed", handleCanvasChange);
+    }
+
+    function handleCanvasChange(e) {
+      console.log("Canvas changed", fabricCanvas);
+      //get the canvas state convert to json
+      const json = JSON.stringify(fabricCanvas);
+      //send the json to the backend
+      socket.emit("canvas-data", json);
+    }
+  }, [fabricCanvas]);
+
+  useEffect(() => {
+    socket.on("get-canvas-data", (data) => {
+      const canvasState = JSON.parse(data);
+      console.log("getting canvas state", canvasState.objects);
+      if (canvasState && canvasState.objects) {
+        canvasState.objects.forEach((object) => {
+          if (object.type === "path") {
+            console.log("add path");
+            const path = new fabric.Path(object.path, {
+              left: object.left,
+              top: object.top,
+              fill: object.fill,
+              stroke: object.stroke,
+              strokeWidth: object.strokeWidth,
+              strokeDashArray: object.strokeDashArray,
+              strokeDashOffset: object.strokeDashOffset,
+              strokeUniform: object.strokeUniform,
+              strokeMiterLimit: object.strokeMiterLimit,
+              visible: object.visible,
+              backgroundColor: object.backgroundColor,
+              strokeLineCap: object.strokeLineCap,
+              strokeLineJoin: object.strokeLineJoin,
+              scaleX: object.scaleX,
+              scaleY: object.scaleY,
+              angle: object.angle,
+              flipX: object.flipX,
+              flipY: object.flipY,
+              opacity: object.opacity,
+              shadow: object.shadow,
+              fillRule: object.fillRule,
+              paintFirst: object.paintFirst,
+              globalCompositeOperation: object.globalCompositeOperation,
+              skewX: object.skewX,
+              skewY: object.skewY,
+            });
+            if (fabricCanvas) {
+              fabricCanvas.add(path);
+            }
+          }
+        });
+      }
+    });
+  }, [fabricCanvas]);
 
   const clearBoard = () => {
     console.log("clearBoard");
@@ -113,3 +158,21 @@ const Board = () => {
 };
 
 export default Board;
+// const path = new fabric.Path(
+//   "M 818.999 586.999 Q 819 587 821.5 587 Q 824, 587, 830, 588.5 Q 836 590 841 592 Q 846 594 853.5 599 Q  861 604 878 616.5 L 895.001 629.001",
+//   {
+//     left: 818.5,
+//     top: 586.5,
+//     fill: null,
+//     stroke: "rgb(0, 0, 0)",
+//     strokeWidth: 1,
+//     strokeLineCap: "round",
+//     strokeLineJoin: "round",
+//     scaleX: 1,
+//     scaleY: 1,
+//     angle: 0,
+//     flipX: false,
+//     flipY: false,
+//     opacity: 1,
+//   }
+// );

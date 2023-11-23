@@ -23,6 +23,7 @@ io.on("connection", (socket) => {
   socket.on("register", (name) => {
     console.log("User registered ", name);
     socket.broadcast.emit("welome", name);
+    io.emit("get-canvas-data", JSON.stringify(canvasState));
   });
 
   socket.on("disconnect", function () {
@@ -33,9 +34,8 @@ io.on("connection", (socket) => {
     console.log("data being passed in");
     let incomingData = JSON.parse(data);
     canvasState = { ...canvasState, ...incomingData };
-    console.log(incomingData.objects.length);
-
-    io.emit("canvas-data", JSON.stringify(canvasState));
+    console.log("canvasState length", canvasState.objects.length);
+  
   });
 });
 
