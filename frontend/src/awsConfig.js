@@ -1,12 +1,14 @@
-const AWSConfig = require('aws-sdk');
+const AWS = require('aws-sdk');
 
-AWSConfig.config.update({
-  accessKeyId: 'accessKeyGoesHere',
-  secretAccessKey: 'secretKeyGoesHere',
-  region: 'us-east-1', // e.g., 'us-east-1'
+// Configure AWS with credentials from environment variables
+AWS.config.update({
+  accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
+  region: process.env.REACT_APP_AWS_REGION
 });
 
+console.log(process.env.REACT_APP_AWS_ACCESS_KEY_ID);
+console.log(process.env.REACT_APP_AWS_SECRET_ACCESS_KEY);
+console.log(process.env.REACT_APP_AWS_REGION);
 
-export default AWSConfig;
-
-
+module.exports = AWS;
