@@ -1,41 +1,26 @@
-import { useEffect, useState } from "react";
-import io from "socket.io-client";
-import "./App.scss";
-import Board from "./components/Board";
-import Header from "./components/Header";
-
-const socket = io.connect("http://localhost:3001/");
-
+import React, { useState } from 'react';
+import databaseCalls from './databaseCalls/databaseCalls';
 function App() {
-  const [message, setMessage] = useState("");
-  const [messageReceived, setMessageReceived] = useState("");
-  const [action, setAction] = useState("drawing");
+  const [inputValue1, setInputValue1] = useState('');
 
-  const sendMessage = () => {
-    socket.emit("send_message", { message: message });
+  const saveDataToDb = async () => {
+    await databaseCalls.newMessage(inputValue1)
   };
 
-
-  useEffect(() => {
-    socket.on("receive_message", (data) => {
-      setMessageReceived(data.message);
-    });
-  }, [socket]);
+  const fetchMessagesFromDb = async () => {
+    console.log("List of JSON documents:", await databaseCalls.fetchCloudMessages());
+};
 
   return (
     <div className="App">
-      <Header />
-      <Board />
-
-      {/* <input
-        placeholder="message"
-        onChange={(event) => {
-          setMessage(event.target.value);
-        }}
+      <h1>Save data to dynamo DB</h1>
+      <input
+        type="text"
+        value={inputValue1}
+        onChange={(e) => setInputValue1(e.target.value)}
       />
-      <button onClick={sendMessage}>Send message</button>
-      <h1>Message:</h1>
-      {messageReceived} */}
+      <button onClick={saveDataToDb}>Save data to dynamo DB</button> <br/><br/>
+      <button onClick={fetchMessagesFromDb}>Fetch from dynamo DB</button> <br/><br/>
     </div>
   );
 }
