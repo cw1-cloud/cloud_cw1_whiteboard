@@ -7,8 +7,5 @@ AWS.config.update({
   region: process.env.REACT_APP_AWS_REGION
 });
 
-console.log(process.env.REACT_APP_AWS_ACCESS_KEY_ID);
-console.log(process.env.REACT_APP_AWS_SECRET_ACCESS_KEY);
-console.log(process.env.REACT_APP_AWS_REGION);
 
 module.exports = AWS;
