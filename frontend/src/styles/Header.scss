@@ -1,15 +1,23 @@
 .headerbar {
-  background-color: #F3F6F6;
+  background-color: #f3f6f6;
   padding-bottom: 20px;
   text-align: left;
   position: absolute;
   width: 100%;
-  top:0;
+  top: 0;
   z-index: 2;
 
-  .header-text{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .header-text {
     // position: relative;
     // width: 100%;
+    padding: 10px 20px;
+  }
+
+  .header-user {
     padding: 10px 20px;
   }
 }

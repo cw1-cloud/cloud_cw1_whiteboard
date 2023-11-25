@@ -16,26 +16,34 @@ const io = new Server(server, {
 
 //local canvas state
 let canvasState = {};
+//maintain all the connections
+let connections = [];
 
+// When a client connects, we note it in the console
 io.on("connection", (socket) => {
-  console.log("User connected ", socket.id);
-
-  socket.on("register", (name) => {
-    console.log("User registered ", name);
-    socket.broadcast.emit("welome", name);
-    io.emit("get-canvas-data", JSON.stringify(canvasState));
+  socket.on("disconnect", () => {
+    user = connections.find((conn) => conn.socket.id === socket.id);
+    if (user) {
+      console.log(`${user.name} disconnected with socketId: ${user.socket.id}`);
+      connections = connections.filter((conn) => conn.socket.id !== socket.id);
+    }
   });
 
-  socket.on("disconnect", function () {
-    console.log("User disconnected");
+  socket.on("register", (name) => {
+    connections.push({ socket: socket, name: name });
+    console.log(`${name} connected with socketId: ${socket.id}`);
+    socket.emit("get-canvas-data", JSON.stringify(canvasState));
   });
 
   socket.on("canvas-data", (data) => {
-    console.log("data being passed in");
-    let incomingData = JSON.parse(data);
+    //update canvas state
+    const incomingData = JSON.parse(data);
+    connections.forEach((conn) => {
+      if (conn.socket.id !== socket.id) {
+        conn.socket.emit("get-canvas-data", data);
+      }
+    });
     canvasState = { ...canvasState, ...incomingData };
-    console.log("canvasState length", canvasState.objects.length);
-  
   });
 });
 

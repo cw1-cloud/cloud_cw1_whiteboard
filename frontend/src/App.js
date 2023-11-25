@@ -7,9 +7,12 @@ import WelcomeModal from "./components/welcomeModal";
 
 function App() {
   const [showModal, setShowModal] = useState(true);
+  const [userName, setUserName] = useState("");
 
   const handleNameSubmit = (userName) => {
+    setUserName(userName);
     if (userName) {
+      socket.connect();
       socket.emit("register", userName);
     }
     handleClose();
@@ -21,7 +24,7 @@ function App() {
 
   return (
     <div className="App">
-      <Header />
+      <Header userName={userName} />
       <Board />
       {showModal && (
         <WelcomeModal
