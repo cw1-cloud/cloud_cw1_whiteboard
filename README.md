@@ -1,4 +1,4 @@
-# Cloud CW1 Whiteboard
+# Distributed Whiteboard Application
 
 ## Project Overview
 
